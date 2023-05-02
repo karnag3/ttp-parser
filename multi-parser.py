@@ -21,6 +21,13 @@ def cmdline_args():
     parser.add_argument(
         "-c", "--config_file", type=str, help="Source configuration file"
     )
+    parser.add_argument(
+        "-f",
+        "--file_format",
+        type=str,
+        help="Output file format (options json or yaml)",
+        default="yaml",
+    )
 
     return parser.parse_args()
 
@@ -34,14 +41,14 @@ def get_config_file(config_file):
     return data_to_parse
 
 
-def run_parser(data_to_parse, ttp_template):
+def run_parser(data_to_parse, ttp_template, file_format):
     parser = ttp(data_to_parse, template=ttp_template)
     parser.parse()
-    results = parser.result(format="yaml")[0]
+    results = parser.result(format=file_format)[0]
     return results
 
 
-def parse_files(data_to_parse, do_print, template):
+def parse_files(data_to_parse, do_print, template, file_format):
     if template:
         template_file = open(template)
         ttp_template = template_file.read()
@@ -61,7 +68,7 @@ def parse_files(data_to_parse, do_print, template):
                     "arista-ttp-templates/templates/" + active_template
                 )
                 ttp_template = template_file.read()
-                results = run_parser(data_to_parse, ttp_template)
+                results = run_parser(data_to_parse, ttp_template, file_format)
                 output_name = (
                     "outputs/" + active_template.replace(".ttp", "") + "-outputfile.yml"
                 )
@@ -75,7 +82,7 @@ def parse_files(data_to_parse, do_print, template):
 def main():
     args = cmdline_args()
     data_to_parse = get_config_file(args.config_file)
-    parse_files(data_to_parse, args.do_print, args.template)
+    parse_files(data_to_parse, args.do_print, args.template, args.file_format)
 
 
 if __name__ == "__main__":
