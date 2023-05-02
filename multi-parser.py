@@ -46,7 +46,6 @@ def run_parser(data_to_parse,do_print):
 
 def main():
    args = cmdline_args()
-   print(args)
    data_to_parse = get_config_file(args.config_file)
    run_parser(data_to_parse,args.do_print)
 
