@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from ttp import ttp
 import os
 import argparse
