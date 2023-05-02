@@ -53,7 +53,9 @@ def parse_files(data_to_parse, do_print, template, file_format):
         template_file = open(template)
         ttp_template = template_file.read()
         results = run_parser(data_to_parse, ttp_template)
-        output_name = "outputs/" + template.rsplit("/", 1)[1] + "-outputfile.yml"
+        output_name = (
+            "outputs/" + template.rsplit("/", 1)[1] + "-outputfile." + file_format
+        )
         output = open(output_name, "w")
         output.write(results)
         print("Output file saved as: " + output_name)
@@ -70,7 +72,10 @@ def parse_files(data_to_parse, do_print, template, file_format):
                 ttp_template = template_file.read()
                 results = run_parser(data_to_parse, ttp_template, file_format)
                 output_name = (
-                    "outputs/" + active_template.replace(".ttp", "") + "-outputfile.yml"
+                    "outputs/"
+                    + active_template.replace(".ttp", "")
+                    + "-outputfile."
+                    + file_format
                 )
                 output = open(output_name, "w")
                 output.write(results)
