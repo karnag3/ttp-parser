@@ -15,9 +15,7 @@ def cmdline_args():
         action="store_true",
         help="Print output to screen",
     )
-    parser.add_argument(
-        "-t", "--template", type=str, help="Run against a singular template file"
-    )
+    parser.add_argument("-t", "--template", type=str, help="Run against a singular template file")
     parser.add_argument(
         "-c",
         "--config_file",
@@ -49,40 +47,33 @@ def run_parser(data_to_parse, ttp_template, file_format):
     return results
 
 
+def do_output(output_name, results, do_print):
+    output = open(output_name, "w")
+    output.write(results)
+    print("Output file saved as: " + output_name)
+    if do_print:
+        print(results)
+
+
 def parse_files(data_to_parse, do_print, template, file_format):
     if template:
         template_file = open(template)
         ttp_template = template_file.read()
-        results = run_parser(data_to_parse, ttp_template)
-        output_name = (
-            "outputs/" + template.rsplit("/", 1)[1] + "-outputfile." + file_format
-        )
-        output = open(output_name, "w")
-        output.write(results)
-        print("Output file saved as: " + output_name)
-        if do_print:
-            print(results)
+        results = run_parser(data_to_parse, ttp_template, file_format)
+        output_name = "outputs/" + template.rsplit("/", 1)[1] + "-outputfile." + file_format
+        do_output(output_name, results, do_print)
     else:
         for file in os.listdir(DIRECTORY):
             next_file = os.fsdecode(file)
             if next_file.endswith(".ttp"):
                 active_template = file.decode("utf-8")
-                template_file = open(
-                    "arista-ttp-templates/templates/" + active_template
-                )
+                template_file = open("arista-ttp-templates/templates/" + active_template)
                 ttp_template = template_file.read()
                 results = run_parser(data_to_parse, ttp_template, file_format)
                 output_name = (
-                    "outputs/"
-                    + active_template.replace(".ttp", "")
-                    + "-outputfile."
-                    + file_format
+                    "outputs/" + active_template.replace(".ttp", "") + "-outputfile." + file_format
                 )
-                output = open(output_name, "w")
-                output.write(results)
-                print("Output file saved as: " + output_name)
-                if do_print:
-                    print(results)
+                do_output(output_name, results, do_print)
 
 
 def main():
