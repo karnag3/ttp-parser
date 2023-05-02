@@ -1,0 +1,11 @@
+<group name="platform.trident_mmu.{{profile}}">
+platform trident mmu queue profile {{profile | let('global_active',true)}} apply 
+</group>
+<group name="platform.trident_mmu.{{profile}}.{{direction}}">
+platform trident mmu queue profile {{profile}} 
+<group name="{{type}}.{{queue}}">
+   {{direction}} {{type}} queue {{queue}} reserved {{reserved}}
+   {{direction}} {{type}} queue {{queue}} threshold {{threshold }}
+</group>
+!{{ _end_ }}
+</group>

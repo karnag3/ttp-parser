@@ -1,0 +1,24 @@
+<group name="loopback_interfaces.{{loopback_interface}}">
+interface Loopback{{loopback_interface}}
+
+   description {{description | ORPHRASE }}
+
+   shutdown {{ shutdown | set(true) }}
+
+   vrf {{vrf}}
+   vrf forwarding {{vrf}}
+
+   ip address {{ip_address}}
+   ipv6 enable {{ ipv6_enable | set(true) }}
+   ipv6 address {{ipv6_address}}
+
+   ip proxy-arp {{ip_proxy_arp | set(True)}}
+
+   ip ospf area {{ ospf_area }}
+
+   isis enable {{isis_enable | set(true) }}
+   isis passive {{isis_passive | set(true) }}
+   isis metric {{isis_metric}}
+   isis network point-to-point {{isis_network_point_to_point | set(true) }}
+! {{_end_}}
+</group>

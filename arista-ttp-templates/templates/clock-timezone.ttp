@@ -1,0 +1,4 @@
+<group name="clock">
+clock timezone {{ timezone | ORPHRASE }}
+! {{_end_}}
+</group>
