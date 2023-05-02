@@ -19,7 +19,11 @@ def cmdline_args():
         "-t", "--template", type=str, help="Run against a singular template file"
     )
     parser.add_argument(
-        "-c", "--config_file", type=str, help="Source configuration file", default = 'conf-files/conf.cfg'
+        "-c",
+        "--config_file",
+        type=str,
+        help="Source configuration file",
+        default="conf-files/conf.cfg",
     )
     parser.add_argument(
         "-f",
