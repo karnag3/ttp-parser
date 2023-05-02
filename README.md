@@ -9,8 +9,7 @@ e.g.:
 outputs/clock-timezone-outputfile.yaml
 
 
-
-optional arguments:
+  optional arguments:
 
   -h, --help            show this help message and exit
   
