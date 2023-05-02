@@ -1,9 +1,16 @@
 <group name="logging">
+logging buffered {{size}}
+logging trap {{trap}}
 no logging console {{ console | set(false) }}
 logging console {{ console | set(true) }}
-logging trap {{trap}}
 <group name="host" method="list">
 logging host {{host}}
+</group>
+<group name="vrfs.{{vrf}}" method="list">
+logging vrf {{vrf}} source-interface {{source_interface}} 
+</group>
+<group name="vrfs.{{vrf}}.hosts.{{host}}" method="list">
+logging vrf {{vrf}} host {{host}} {{port}}
 </group>
 logging format hostname {{hostname}}
 logging format timestamp {{timestamp}}
