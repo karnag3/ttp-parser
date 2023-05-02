@@ -2,6 +2,8 @@ from ttp import ttp
 import os
 import argparse
 
+TEMPLATE_DIR = 'arista-ttp-templates/templates'
+DIRECTORY = os.fsencode(TEMPLATE_DIR)
 
 def cmdline_args():
     parser = argparse.ArgumentParser()
@@ -25,29 +27,44 @@ def get_config_file(config_file):
   data_to_parse = (source_file.read())
   return data_to_parse
 
-TEMPLATE_DIR = 'arista-ttp-templates/templates'
-DIRECTORY = os.fsencode(TEMPLATE_DIR)
+def run_parser(data_to_parse, ttp_template):
+  parser = ttp(data_to_parse, template=ttp_template)
+  parser.parse()
+  results = parser.result(format='yaml')[0]
+  return results
 
 
-def run_parser(data_to_parse,do_print):
-  for file in os.listdir(DIRECTORY):
-    next_file  = os.fsdecode(file) 
-    if next_file.endswith('.ttp'):
-      active_template = file.decode('utf-8')
-      template_file = open('arista-ttp-templates/templates/' + active_template)
-      ttp_template = (template_file.read())
-      parser = ttp(data_to_parse, template=ttp_template)
-      parser.parse()
-      results = parser.result(format='yaml')[0]
-      output = open('outputs/' + active_template.replace('.ttp','') + '-outputfile.yml', 'w')
-      output.write(results)
-      if do_print:
-        print(results)
+
+def parse_files(data_to_parse,do_print,template):
+  if template:
+    template_file = open(template)
+    ttp_template = (template_file.read())
+    results = run_parser(data_to_parse, ttp_template)
+    output_name = 'outputs/' + template.rsplit('/',1)[1] + '-outputfile.yml'
+    output = open(output_name, 'w')
+    output.write(results)
+    print('Output file saved as: ' + output_name)
+    if do_print:
+      print(results)
+  else:   
+    for file in os.listdir(DIRECTORY):
+      next_file  = os.fsdecode(file) 
+      if next_file.endswith('.ttp'):
+        active_template = file.decode('utf-8')
+        template_file = open('arista-ttp-templates/templates/' + active_template)
+        ttp_template = (template_file.read())
+        results = run_parser(data_to_parse, ttp_template)
+        output_name = 'outputs/' + active_template.replace('.ttp','') + '-outputfile.yml'
+        output = open(output_name, 'w')
+        output.write(results)
+        print('Output file saved as: ' + output_name)
+        if do_print:
+          print(results)
 
 def main():
    args = cmdline_args()
    data_to_parse = get_config_file(args.config_file)
-   run_parser(data_to_parse,args.do_print)
+   parse_files(data_to_parse,args.do_print,args.template)
 
 if __name__ == "__main__":
     main()
