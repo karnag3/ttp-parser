@@ -11,6 +11,7 @@ outputs/clock-timezone-outputfile.yaml
 
 
 optional arguments:
+
   -h, --help            show this help message and exit
   -p, --do_print        Print output to screen
   -t TEMPLATE, --template TEMPLATE
