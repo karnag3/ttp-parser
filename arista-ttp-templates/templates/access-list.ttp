@@ -5,3 +5,14 @@ ip access-list standard {{acl_name}}
 </group>
 ! {{_end_}}
 </group>
+<group name="ip_access_lists">
+ip access-list {{name}}
+<group name="name">
+name {{name}}
+</group> 
+<group name="entries" method="table">
+   {{index}} {{action}} {{statement | ORPHRASE}}
+</group>
+   counters per-entry {{ counters_per_entry | set(true) }}
+! {{_end_}}
+</group>
