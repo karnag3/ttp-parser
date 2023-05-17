@@ -13,12 +13,14 @@ def cmdline_args():
         action="store_true",
         help="Print output to screen",
     )
-    parser.add_argument("-t", "--template", type=str, help="Run against a singular template file")
+    parser.add_argument(
+        "-t", "--template", type=str, help="Run against a singular template file"
+    )
     parser.add_argument(
         "-c",
         "--config_file",
         type=str,
-        help="Source configuration file",
+        help="Source configuration file (saved as .cfg - default is conf-files/conf.cfg)",
         default="conf-files/conf.cfg",
     )
     parser.add_argument(
@@ -39,11 +41,16 @@ def cmdline_args():
     return parser.parse_args()
 
 
+
 def get_config_file(config_file):
     source_file = open(config_file, "r")
     data_to_parse = source_file.read()
     return data_to_parse
 
+def get_file_name(config_file):
+    full_name = os.path.basename(config_file)
+    file_name = os.path.splitext(full_name)
+    return file_name[0]
 
 def run_parser(data_to_parse, ttp_template, file_format):
     parser = ttp(data_to_parse, template=ttp_template)
@@ -59,13 +66,14 @@ def do_output(output_name, results, do_print):
     if do_print:
         print(results)
 
-
-def parse_files(data_to_parse, do_print, template, file_format, template_dir):
+def parse_files(data_to_parse, do_print, template, file_format, template_dir, conf_name):
     if template:
         template_file = open(template)
         ttp_template = template_file.read()
         results = run_parser(data_to_parse, ttp_template, file_format)
-        output_name = "outputs/" + template.rsplit("/", 1)[1] + "-outputfile." + file_format
+        output_name = (
+            "outputs/" + template.rsplit("/", 1)[1] + "-outputfile." + file_format
+        )
         do_output(output_name, results, do_print)
     else:
         directory = os.fsencode(template_dir)
@@ -77,7 +85,12 @@ def parse_files(data_to_parse, do_print, template, file_format, template_dir):
                 ttp_template = template_file.read()
                 results = run_parser(data_to_parse, ttp_template, file_format)
                 output_name = (
-                    "outputs/" + active_template.replace(".ttp", "") + "-outputfile." + file_format
+                    "outputs/"
+                    + conf_name.replace(".cfg", "")
+                    + "-"
+                    + active_template.replace(".ttp", "")
+                    + "-outputfile."
+                    + file_format
                 )
                 do_output(output_name, results, do_print)
 
@@ -85,12 +98,15 @@ def parse_files(data_to_parse, do_print, template, file_format, template_dir):
 def main():
     args = cmdline_args()
     data_to_parse = get_config_file(args.config_file)
+    conf_name = get_file_name(args.config_file)
+    print(conf_name)
     parse_files(
         data_to_parse,
         args.do_print,
         args.template,
         args.file_format,
         args.template_directory,
+        conf_name,
     )
 
 
